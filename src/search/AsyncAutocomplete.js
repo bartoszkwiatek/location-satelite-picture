@@ -2,7 +2,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useState } from 'react'
-import { mapBoxSearch } from '../utils/apiUrls'
+import { mapBoxSearch } from '../common/apiUrls'
 
 export const AsyncAutocomplete = (props) => {
   const [open, setOpen] = useState(false)
@@ -11,31 +11,37 @@ export const AsyncAutocomplete = (props) => {
   const loading = open && options.length === 0 && !error
 
   const handleChange = async (e) => {
-    await fetch(mapBoxSearch(e.target.value))
-      .then((response) => {
-        if (response.ok) {
-          return response.json()
-        } else {
-          console.log(response)
-          throw new Error(response.statusText)
-        }
-      })
-      .then((data) => {
-        setOptions(data.features)
-      })
-      .catch((error) => {
-        setError(error.message)
-        setOpen(false)
-      })
+    if (e.target.value) {
+      await fetch(mapBoxSearch(e.target.value))
+        .then((response) => {
+          if (response.ok) {
+            return response.json()
+          } else {
+            throw new Error(response.statusText)
+          }
+        })
+        .then((data) => {
+          setOptions(data.features)
+        })
+        .catch((error) => {
+          setError(error.message)
+          setOpen(false)
+        })
+    }
   }
   return (
     <Autocomplete
       id="location-search"
       // style={{ width: 300 }}
       fullWidth
+      forcePopupIcon={false}
       open={open}
       onOpen={() => {
-        setOpen(true)
+        if (options.length !== 0) {
+          setOpen(true)
+        } else {
+          setOpen(false)
+        }
       }}
       onClose={() => {
         setOpen(false)
@@ -46,12 +52,13 @@ export const AsyncAutocomplete = (props) => {
       getOptionLabel={(option) => option.place_name}
       options={options}
       loading={loading}
+      noOptionsText={'Location not found'}
       renderInput={(params) => (
         <TextField
           {...params}
           error={error}
           helperText={error}
-          label="Asynchronous"
+          label="Find location"
           onChange={handleChange}
           // variant="outlined"
           InputProps={{

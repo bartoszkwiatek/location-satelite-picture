@@ -6,12 +6,9 @@ export const Main = () => {
   return (
     <Container maxWidth="sm">
       <Box textAlign="center" m={4}>
-        <Typography component="h1" color="primary">
-          Find location
-        </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <Box display="flex" alignItems="center" justifyContent="center">
+            <Box display="flex" justifyContent="center">
               <Search></Search>
             </Box>
           </Grid>
