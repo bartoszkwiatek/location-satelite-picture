@@ -10,6 +10,9 @@ function App() {
   const [searchHistory, setSearchHistory] = useState([])
   const theme = Theme()
 
+  console.log(searchLocation)
+  console.log(searchHistory)
+
   return (
     <StoreContext.Provider
       value={{

@@ -1,16 +1,18 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { mapBoxSearch } from '../common/apiUrls'
+import { StoreContext } from '../common/Store'
 
 export const AsyncAutocomplete = (props) => {
+  const context = useContext(StoreContext)
   const [open, setOpen] = useState(false)
   const [error, setError] = useState(null)
   const [options, setOptions] = useState([])
   const loading = open && options.length === 0 && !error
 
-  const handleChange = async (e) => {
+  const handleInput = async (e) => {
     if (e.target.value) {
       await fetch(mapBoxSearch(e.target.value))
         .then((response) => {
@@ -29,6 +31,20 @@ export const AsyncAutocomplete = (props) => {
         })
     }
   }
+
+  const handleSelect = (value) => {
+    clear()
+    if (value) {
+      context.setSearchLocation(value)
+      context.setSearchHistory([...context.searchHistory, value])
+    }
+  }
+
+  const clear = () => {
+    setOpen(false)
+    setError(null)
+    setOptions([])
+  }
   return (
     <Autocomplete
       id="location-search"
@@ -44,12 +60,13 @@ export const AsyncAutocomplete = (props) => {
         }
       }}
       onClose={() => {
-        setOpen(false)
+        clear()
       }}
       getOptionSelected={(option, value) =>
         option.place_name === value.place_name
       }
       getOptionLabel={(option) => option.place_name}
+      onChange={(event, value) => handleSelect(value)}
       options={options}
       loading={loading}
       noOptionsText={'Location not found'}
@@ -59,8 +76,7 @@ export const AsyncAutocomplete = (props) => {
           error={error}
           helperText={error}
           label="Find location"
-          onChange={handleChange}
-          // variant="outlined"
+          onChange={handleInput}
           InputProps={{
             ...params.InputProps,
             endAdornment: (
