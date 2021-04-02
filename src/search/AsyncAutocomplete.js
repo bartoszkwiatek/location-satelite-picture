@@ -1,48 +1,35 @@
-import React, { useEffect, useState } from 'react'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import CircularProgress from '@material-ui/core/CircularProgress'
-
-function sleep(delay = 0) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, delay)
-  })
-}
+import React, { useState } from 'react'
+import { mapBoxSearch } from '../utils/apiUrls'
 
 export const AsyncAutocomplete = (props) => {
   const [open, setOpen] = useState(false)
+  const [error, setError] = useState(false)
   const [options, setOptions] = useState([])
   const loading = open && options.length === 0
 
-  useEffect(() => {
-    let active = true
-
-    if (!loading) {
-      return undefined
-    }
-
-    ;(async () => {
-      const response = await fetch(
-        'https://country.register.gov.uk/records.json?page-size=5000',
-      )
-      await sleep(1e3) // For demo purposes.
-      const countries = await response.json()
-
-      if (active) {
-        setOptions(Object.keys(countries).map((key) => countries[key].item[0]))
-      }
-    })()
-
-    return () => {
-      active = false
-    }
-  }, [loading])
-
-  useEffect(() => {
-    if (!open) {
-      setOptions([])
-    }
-  }, [open])
+  const handleChange = (e) => {
+    console.log(e.target.value)
+    fetch(mapBoxSearch(e.target.value))
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          setError(response.statusText)
+          console.error('Error:', response.statusText)
+        }
+      })
+      .then((data) => {
+        setOptions(data.features)
+        console.log(data.features)
+      })
+      .catch((error) => {
+        setError(error)
+        console.error('Error:', error)
+      })
+  }
 
   return (
     <Autocomplete
@@ -55,14 +42,17 @@ export const AsyncAutocomplete = (props) => {
       onClose={() => {
         setOpen(false)
       }}
-      getOptionSelected={(option, value) => option.name === value.name}
-      getOptionLabel={(option) => option.name}
+      getOptionSelected={(option, value) =>
+        option.place_name === value.place_name
+      }
+      getOptionLabel={(option) => option.place_name}
       options={options}
       loading={loading}
       renderInput={(params) => (
         <TextField
           {...params}
           label="Asynchronous"
+          onChange={handleChange}
           // variant="outlined"
           InputProps={{
             ...params.InputProps,
