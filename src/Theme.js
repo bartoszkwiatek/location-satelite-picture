@@ -8,7 +8,7 @@ const Theme = () =>
         palette: {
           type: 'dark',
           primary: {
-            main: '#e91e63',
+            main: '#006efa',
           },
           secondary: {
             main: '#2962ff',

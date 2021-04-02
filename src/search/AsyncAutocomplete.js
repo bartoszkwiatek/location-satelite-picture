@@ -6,35 +6,33 @@ import { mapBoxSearch } from '../utils/apiUrls'
 
 export const AsyncAutocomplete = (props) => {
   const [open, setOpen] = useState(false)
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(null)
   const [options, setOptions] = useState([])
-  const loading = open && options.length === 0
+  const loading = open && options.length === 0 && !error
 
-  const handleChange = (e) => {
-    console.log(e.target.value)
-    fetch(mapBoxSearch(e.target.value))
+  const handleChange = async (e) => {
+    await fetch(mapBoxSearch(e.target.value))
       .then((response) => {
         if (response.ok) {
           return response.json()
         } else {
-          setError(response.statusText)
-          console.error('Error:', response.statusText)
+          console.log(response)
+          throw new Error(response.statusText)
         }
       })
       .then((data) => {
         setOptions(data.features)
-        console.log(data.features)
       })
       .catch((error) => {
-        setError(error)
-        console.error('Error:', error)
+        setError(error.message)
+        setOpen(false)
       })
   }
-
   return (
     <Autocomplete
-      id="asynchronous-demo"
-      style={{ width: 300 }}
+      id="location-search"
+      // style={{ width: 300 }}
+      fullWidth
       open={open}
       onOpen={() => {
         setOpen(true)
@@ -51,6 +49,8 @@ export const AsyncAutocomplete = (props) => {
       renderInput={(params) => (
         <TextField
           {...params}
+          error={error}
+          helperText={error}
           label="Asynchronous"
           onChange={handleChange}
           // variant="outlined"
