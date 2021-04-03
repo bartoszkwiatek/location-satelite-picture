@@ -1,4 +1,12 @@
-import { CircularProgress, makeStyles, Paper, Tooltip } from '@material-ui/core'
+import {
+  Card,
+  CardContent,
+  CircularProgress,
+  makeStyles,
+  Paper,
+  Tooltip,
+  Typography,
+} from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
 import MapGL, { MapContext } from 'react-map-gl'
 import { mapBoxToken } from '../common/apiUrls'
@@ -17,7 +25,6 @@ const CustomMarker = (props) => {
   const { longitude, latitude } = props
 
   const [x, y] = context.viewport.project([longitude, latitude])
-  console.log(x, y)
   const markerStyle = {
     width: '24px',
     height: '24px',
@@ -60,6 +67,7 @@ export const Map = () => {
 
   useEffect(() => {
     setIsLoaded(false)
+    setError(false)
     if (mapBox) {
       setViewport({
         ...viewport,
@@ -72,6 +80,21 @@ export const Map = () => {
 
   if (!isLoaded) {
     return <CircularProgress />
+  }
+
+  if (error) {
+    return (
+      <Card square className={classes.root}>
+        <CardContent>
+          <Typography gutterBottom variant="h3" component="h6">
+            Error
+          </Typography>
+          <Typography variant="body1" color="textSecondary" component="p">
+            {error}
+          </Typography>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (

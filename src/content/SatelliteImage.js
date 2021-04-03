@@ -50,6 +50,7 @@ export const SatelliteImage = () => {
 
   useEffect(() => {
     setIsLoaded(false)
+    setError(false)
     if (mapBox) {
       async function fetchData() {
         return await fetch(nasaSearch(mapBox.center))
@@ -64,9 +65,11 @@ export const SatelliteImage = () => {
         })
         .then((data) => {
           context.setSearchLocation({ ...context.searchLocation, nasa: data })
+          context.setSearchHistory([
+            ...context.searchHistory,
+            context.searchLocation,
+          ])
           setIsLoaded(true)
-
-          // setOptions(data.features)
         })
         .catch((error) => {
           setError(error.message)
@@ -76,11 +79,26 @@ export const SatelliteImage = () => {
   }, [mapBox])
 
   const toDateString = (date) => {
-    return new Date(date).toDateString()
+    return new Date(date).toUTCString()
   }
 
   if (!isLoaded) {
     return <CircularProgress />
+  }
+
+  if (error) {
+    return (
+      <Card square className={classes.root}>
+        <CardContent>
+          <Typography gutterBottom variant="h3" component="h6">
+            Error
+          </Typography>
+          <Typography variant="body1" color="textSecondary" component="p">
+            {error}
+          </Typography>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (
@@ -90,6 +108,7 @@ export const SatelliteImage = () => {
           component="img"
           height={'100%'}
           src={nasa.url}
+          // onError={() => (this.src = 'https://placeimg.com/200/300/animals')}
           alt="Satelite image"
         />
         <CardContent className={classes.cardContent}>

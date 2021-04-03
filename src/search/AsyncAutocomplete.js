@@ -1,9 +1,11 @@
+import { Icon, InputAdornment } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import React, { useContext, useState } from 'react'
 import { mapBoxSearch } from '../common/apiUrls'
 import { StoreContext } from '../common/Store'
+import SearchIcon from '@material-ui/icons/Search'
 
 export const AsyncAutocomplete = (props) => {
   const context = useContext(StoreContext)
@@ -78,6 +80,7 @@ export const AsyncAutocomplete = (props) => {
           onChange={handleInput}
           InputProps={{
             ...params.InputProps,
+
             endAdornment: (
               <React.Fragment>
                 {loading ? (
