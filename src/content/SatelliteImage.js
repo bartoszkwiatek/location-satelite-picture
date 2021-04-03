@@ -22,7 +22,8 @@ const useStyles = makeStyles((theme) => ({
     '& > *': {},
   },
   cardContent: {
-    animation: 'all cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+    transition: 'all 0.2s ease',
+    padding: '0',
     opacity: '0',
     position: 'absolute',
     bottom: '0',
@@ -34,8 +35,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   textContainer: {
+    paddingBottom: theme.spacing(2),
+    background: 'rgb(0, 0, 0, 0.5)',
     position: 'absolute',
-    bottom: theme.spacing(2),
+    bottom: '0',
     left: '0',
     right: '0',
   },
@@ -49,9 +52,9 @@ export const SatelliteImage = () => {
   // const coordinates = context.searchLocation.mapBox.center // <- chciałbym tak sobie skrócić ten zapis ale nie mogę bo jest undefined, jak żyć?
   useEffect(() => {
     if (context.searchLocation.mapBox) {
+      setIsLoaded(false)
       async function fetchData() {
         // <- da sie to zrobić jako anonymous?
-        console.log('fetch')
         return await fetch(nasaSearch(context.searchLocation.mapBox.center))
       }
       fetchData() // <- bo mi jakieś errory wali
@@ -85,7 +88,7 @@ export const SatelliteImage = () => {
 
   return (
     <Card className={classes.root}>
-      <CardActionArea style={{ position: 'relative' }}>
+      <CardContent style={{ position: 'relative' }}>
         <CardMedia
           component="img"
           height={'100%'}
@@ -102,7 +105,7 @@ export const SatelliteImage = () => {
             </Typography>
           </Container>
         </CardContent>
-      </CardActionArea>
+      </CardContent>
     </Card>
   )
 }

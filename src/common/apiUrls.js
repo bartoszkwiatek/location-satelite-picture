@@ -1,7 +1,9 @@
+const mapBoxToken =
+  'pk.eyJ1Ijoia3dpYWNpdSIsImEiOiJja24wZGZmNGMwamVmMm9xdXYyaGJ1enA0In0.0nTj2gW98T9tunvZ6ti39g'
+
 const mapBoxSearch = (searchQuery) => {
   const url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
-  const key =
-    'access_token=pk.eyJ1Ijoia3dpYWNpdSIsImEiOiJja24wZGZmNGMwamVmMm9xdXYyaGJ1enA0In0.0nTj2gW98T9tunvZ6ti39g'
+  const key = `access_token=${mapBoxToken}`
 
   return `${url}${searchQuery}.json?${key}`
 }
@@ -15,4 +17,4 @@ const nasaSearch = (searchQuery) => {
   return `${url}?lon=${lon}&lat=${lat}&${dim}&${key}`
 }
 
-export { mapBoxSearch, nasaSearch }
+export { mapBoxToken, mapBoxSearch, nasaSearch }
