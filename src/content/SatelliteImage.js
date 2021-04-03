@@ -2,7 +2,6 @@ import {
   Card,
   CardContent,
   CardMedia,
-  CircularProgress,
   Container,
   LinearProgress,
   makeStyles,

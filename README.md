@@ -2,7 +2,7 @@
 
 Purpose of this app is to use mapbox API to find location based on user input, and then return map and satellite image from NASA API
 
-## APIs
+## APIs endpoints
 
 - https://api.mapbox.com/geocoding/v5/mapbox.places/
 - https://api.nasa.gov/planetary/earth/assets?
