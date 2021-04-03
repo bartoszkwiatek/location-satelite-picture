@@ -35,7 +35,7 @@ export const AsyncAutocomplete = (props) => {
   const handleSelect = (value) => {
     clear()
     if (value) {
-      context.setSearchLocation(value)
+      context.setSearchLocation({ ...context.searchLocation, mapBox: value })
       // context.setSearchHistory([...context.searchHistory, value])
     }
   }

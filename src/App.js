@@ -6,6 +6,11 @@ import { Main } from './main/Main'
 import { Theme } from './Theme'
 
 function App() {
+  // const [searchLocation, setSearchLocation] = useState({
+  //   mapBox: null,
+  //   nasa: null,
+  //   map: null,
+  // })
   const [searchLocation, setSearchLocation] = useState({})
   const [searchHistory, setSearchHistory] = useState([])
   const theme = Theme()

@@ -3,11 +3,14 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
+  CircularProgress,
+  Container,
   makeStyles,
   Paper,
   Typography,
 } from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
+import { nasaSearch } from '../common/apiUrls'
 import { StoreContext } from '../common/Store'
 
 const useStyles = makeStyles((theme) => ({
@@ -15,10 +18,26 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: theme.spacing(4),
     width: '100%',
-    height: theme.spacing(16),
     '& > *': {},
+  },
+  cardContent: {
+    animation: 'all cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+    opacity: '0',
+    position: 'absolute',
+    bottom: '0',
+    top: '0',
+    left: '0',
+    right: '0',
+    '&:hover': {
+      opacity: '1',
+    },
+  },
+  textContainer: {
+    position: 'absolute',
+    bottom: theme.spacing(2),
+    left: '0',
+    right: '0',
   },
 }))
 
@@ -27,31 +46,61 @@ export const SatelliteImage = () => {
   const context = useContext(StoreContext)
   const [isLoaded, setIsLoaded] = useState(false)
   const [error, setError] = useState(null)
+  // const coordinates = context.searchLocation.mapBox.center // <- chciałbym tak sobie skrócić ten zapis ale nie mogę bo jest undefined, jak żyć?
   useEffect(() => {
-    if (context.searchLocation.center) {
+    if (context.searchLocation.mapBox) {
       async function fetchData() {
-        const response = await context.searchLocation.center
-        return response
+        // <- da sie to zrobić jako anonymous?
+        console.log('fetch')
+        return await fetch(nasaSearch(context.searchLocation.mapBox.center))
       }
-      fetchData().then((coordinates) => console.log(coordinates))
+      fetchData() // <- bo mi jakieś errory wali
+        .then((response) => {
+          if (response.ok) {
+            return response.json()
+          } else {
+            throw new Error(response.statusText)
+          }
+        })
+        .then((data) => {
+          context.setSearchLocation({ ...context.searchLocation, nasa: data })
+          setIsLoaded(true)
+
+          // setOptions(data.features)
+        })
+        .catch((error) => {
+          setError(error.message)
+          setIsLoaded(true)
+        })
     }
-  }, [context.searchLocation])
+  }, [context.searchLocation.mapBox])
+
+  const toDateString = (date) => {
+    return new Date(date).toDateString()
+  }
+
+  if (!isLoaded) {
+    return <CircularProgress />
+  }
 
   return (
     <Card className={classes.root}>
-      <CardActionArea>
+      <CardActionArea style={{ position: 'relative' }}>
         <CardMedia
-          image="/static/images/cards/contemplative-reptile.jpg"
-          title="Contemplative Reptile"
+          component="img"
+          height={'100%'}
+          src={context.searchLocation.nasa.url}
+          alt="Satelite image"
         />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            Lizard
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            Lizards are a widespread group of squamate reptiles, with over 6,000
-            species, ranging across all continents except Antarctica
-          </Typography>
+        <CardContent className={classes.cardContent}>
+          <Container className={classes.textContainer}>
+            <Typography gutterBottom variant="body1" component="h6">
+              {`${context.searchLocation.mapBox.center[0]}, ${context.searchLocation.mapBox.center[1]}`}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              Date: {toDateString(context.searchLocation.nasa.date)}
+            </Typography>
+          </Container>
         </CardContent>
       </CardActionArea>
     </Card>

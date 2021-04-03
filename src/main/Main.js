@@ -1,9 +1,11 @@
 import { Box, Container, Grid, Paper, Typography } from '@material-ui/core'
-import React from 'react'
+import React, { useContext } from 'react'
+import { StoreContext } from '../common/Store'
 import { SatelliteImage } from '../content/SatelliteImage'
 import { Search } from '../search/Search'
 
 export const Main = () => {
+  const context = useContext(StoreContext)
   return (
     <Container maxWidth="sm">
       <Box textAlign="center" m={4}>
@@ -13,9 +15,11 @@ export const Main = () => {
               <Search></Search>
             </Box>
           </Grid>
-          <Grid item xs={6}>
-            <SatelliteImage />
-          </Grid>
+          {context.searchLocation.mapBox && (
+            <Grid item xs={6}>
+              <SatelliteImage />
+            </Grid>
+          )}
           <Grid item xs={6}>
             <Paper>xs=6</Paper>
           </Grid>
