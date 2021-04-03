@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     padding: theme.spacing(4),
     width: '100%',
-    height: theme.spacing(16),
+    height: theme.spacing(12),
     '& > *': {},
   },
 }))

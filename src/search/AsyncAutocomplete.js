@@ -48,7 +48,6 @@ export const AsyncAutocomplete = (props) => {
   return (
     <Autocomplete
       id="location-search"
-      // style={{ width: 300 }}
       fullWidth
       forcePopupIcon={false}
       open={open}

@@ -65,6 +65,8 @@ export const SatelliteImage = () => {
         .then((data) => {
           context.setSearchLocation({ ...context.searchLocation, nasa: data })
           setIsLoaded(true)
+
+          // setOptions(data.features)
         })
         .catch((error) => {
           setError(error.message)
@@ -93,7 +95,7 @@ export const SatelliteImage = () => {
         <CardContent className={classes.cardContent}>
           <Container className={classes.textContainer}>
             <Typography gutterBottom variant="body1" component="h6">
-              {`${mapBox.center[0]}, ${mapBox.center[1]}`}
+              {`${mapBox.center[1]}, ${mapBox.center[0]} `}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
               Date: {toDateString(nasa.date)}

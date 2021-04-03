@@ -17,8 +17,8 @@ export const Main = () => {
   const classes = useStyles()
   return (
     <Container maxWidth="md">
-      <Box textAlign="center" m={4}>
-        <Grid container spacing={3}>
+      <Box textAlign="center" m={3}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <Box display="flex" justifyContent="center">
               <Search></Search>

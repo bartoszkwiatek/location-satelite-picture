@@ -1,6 +1,6 @@
-import { CircularProgress, makeStyles, Paper } from '@material-ui/core'
+import { CircularProgress, makeStyles, Paper, Tooltip } from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
-import MapGL from 'react-map-gl'
+import MapGL, { MapContext } from 'react-map-gl'
 import { mapBoxToken } from '../common/apiUrls'
 import { StoreContext } from '../common/Store'
 
@@ -10,6 +10,39 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
   },
 }))
+
+const CustomMarker = (props) => {
+  const context = useContext(MapContext)
+
+  const { longitude, latitude } = props
+
+  const [x, y] = context.viewport.project([longitude, latitude])
+  console.log(x, y)
+  const markerStyle = {
+    width: '24px',
+    height: '24px',
+    cursor: 'pointer',
+    left: x - 12,
+    top: y - 24,
+    position: 'absolute',
+  }
+  const tooltipTitle = `${Number.parseFloat(latitude).toPrecision(7)},
+  ${Number.parseFloat(longitude).toPrecision(7)}`
+
+  return (
+    <div style={markerStyle}>
+      <Tooltip title={tooltipTitle} arrow placement="top">
+        <img
+          style={{
+            height: '100%',
+          }}
+          src="location-pin.svg"
+          alt="location pin"
+        />
+      </Tooltip>
+    </div>
+  )
+}
 
 export const Map = () => {
   const classes = useStyles()
@@ -50,7 +83,12 @@ export const Map = () => {
         mapStyle="mapbox://styles/mapbox/dark-v9"
         onViewportChange={setViewport}
         mapboxApiAccessToken={mapBoxToken}
-      />
+      >
+        <CustomMarker
+          longitude={viewport.longitude}
+          latitude={viewport.latitude}
+        />
+      </MapGL>
     </Paper>
   )
 }
