@@ -1,6 +1,7 @@
 import { Box, Container, Grid, Paper, Typography } from '@material-ui/core'
 import React, { useContext } from 'react'
 import { StoreContext } from '../common/Store'
+import { Map } from '../content/Map'
 import { SatelliteImage } from '../content/SatelliteImage'
 import { Search } from '../search/Search'
 
@@ -16,13 +17,15 @@ export const Main = () => {
             </Box>
           </Grid>
           {context.searchLocation.mapBox && (
-            <Grid item xs={6}>
-              <SatelliteImage />
-            </Grid>
+            <React.Fragment>
+              <Grid item xs={6}>
+                <SatelliteImage />
+              </Grid>
+              <Grid item xs={6}>
+                <Map />
+              </Grid>
+            </React.Fragment>
           )}
-          <Grid item xs={6}>
-            <Paper>xs=6</Paper>
-          </Grid>
         </Grid>
       </Box>
     </Container>

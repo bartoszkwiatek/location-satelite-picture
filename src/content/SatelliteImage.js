@@ -19,11 +19,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    '& > *': {},
   },
   cardContent: {
     transition: 'all 0.2s ease',
-    padding: '0',
     opacity: '0',
     position: 'absolute',
     bottom: '0',
@@ -47,15 +45,17 @@ const useStyles = makeStyles((theme) => ({
 export const SatelliteImage = () => {
   const classes = useStyles()
   const context = useContext(StoreContext)
+  const mapBox = context.searchLocation.mapBox
+  const nasa = context.searchLocation.nasa
   const [isLoaded, setIsLoaded] = useState(false)
   const [error, setError] = useState(null)
-  // const coordinates = context.searchLocation.mapBox.center // <- chciałbym tak sobie skrócić ten zapis ale nie mogę bo jest undefined, jak żyć?
+
   useEffect(() => {
-    if (context.searchLocation.mapBox) {
-      setIsLoaded(false)
+    setIsLoaded(false)
+    if (mapBox) {
       async function fetchData() {
         // <- da sie to zrobić jako anonymous?
-        return await fetch(nasaSearch(context.searchLocation.mapBox.center))
+        return await fetch(nasaSearch(mapBox.center))
       }
       fetchData() // <- bo mi jakieś errory wali
         .then((response) => {
@@ -76,7 +76,7 @@ export const SatelliteImage = () => {
           setIsLoaded(true)
         })
     }
-  }, [context.searchLocation.mapBox])
+  }, [mapBox])
 
   const toDateString = (date) => {
     return new Date(date).toDateString()
@@ -88,20 +88,20 @@ export const SatelliteImage = () => {
 
   return (
     <Card className={classes.root}>
-      <CardContent style={{ position: 'relative' }}>
+      <CardContent style={{ padding: 0, position: 'relative' }}>
         <CardMedia
           component="img"
           height={'100%'}
-          src={context.searchLocation.nasa.url}
+          src={nasa.url}
           alt="Satelite image"
         />
         <CardContent className={classes.cardContent}>
           <Container className={classes.textContainer}>
             <Typography gutterBottom variant="body1" component="h6">
-              {`${context.searchLocation.mapBox.center[0]}, ${context.searchLocation.mapBox.center[1]}`}
+              {`${mapBox.center[0]}, ${mapBox.center[1]}`}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-              Date: {toDateString(context.searchLocation.nasa.date)}
+              Date: {toDateString(nasa.date)}
             </Typography>
           </Container>
         </CardContent>
