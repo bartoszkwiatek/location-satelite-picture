@@ -1,20 +1,8 @@
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  CircularProgress,
-  Container,
-  makeStyles,
-  Paper,
-  Typography,
-} from '@material-ui/core'
+import { CircularProgress, makeStyles, Paper } from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
-import { nasaSearch } from '../common/apiUrls'
-import { StoreContext } from '../common/Store'
 import MapGL from 'react-map-gl'
 import { mapBoxToken } from '../common/apiUrls'
+import { StoreContext } from '../common/Store'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,7 +28,6 @@ export const Map = () => {
   useEffect(() => {
     setIsLoaded(false)
     if (mapBox) {
-      console.log('loaded')
       setViewport({
         ...viewport,
         longitude: mapBox.center[0],
@@ -55,7 +42,7 @@ export const Map = () => {
   }
 
   return (
-    <Box className={classes.root}>
+    <Paper square className={classes.root}>
       <MapGL
         {...viewport}
         width="100%"
@@ -64,6 +51,6 @@ export const Map = () => {
         onViewportChange={setViewport}
         mapboxApiAccessToken={mapBoxToken}
       />
-    </Box>
+    </Paper>
   )
 }

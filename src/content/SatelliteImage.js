@@ -1,12 +1,10 @@
 import {
   Card,
-  CardActionArea,
   CardContent,
   CardMedia,
   CircularProgress,
   Container,
   makeStyles,
-  Paper,
   Typography,
 } from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
@@ -54,10 +52,9 @@ export const SatelliteImage = () => {
     setIsLoaded(false)
     if (mapBox) {
       async function fetchData() {
-        // <- da sie to zrobić jako anonymous?
         return await fetch(nasaSearch(mapBox.center))
       }
-      fetchData() // <- bo mi jakieś errory wali
+      fetchData()
         .then((response) => {
           if (response.ok) {
             return response.json()
@@ -68,8 +65,6 @@ export const SatelliteImage = () => {
         .then((data) => {
           context.setSearchLocation({ ...context.searchLocation, nasa: data })
           setIsLoaded(true)
-
-          // setOptions(data.features)
         })
         .catch((error) => {
           setError(error.message)
@@ -87,7 +82,7 @@ export const SatelliteImage = () => {
   }
 
   return (
-    <Card className={classes.root}>
+    <Card square className={classes.root}>
       <CardContent style={{ padding: 0, position: 'relative' }}>
         <CardMedia
           component="img"

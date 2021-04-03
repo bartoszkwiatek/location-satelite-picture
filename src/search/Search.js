@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 export const Search = () => {
   const classes = useStyles()
   return (
-    <Paper className={classes.root}>
+    <Paper square className={classes.root}>
       <AsyncAutocomplete />
     </Paper>
   )
