@@ -1,5 +1,6 @@
 import { Box, Container, Grid, Paper, Typography } from '@material-ui/core'
 import React from 'react'
+import { SatelliteImage } from '../content/SatelliteImage'
 import { Search } from '../search/Search'
 
 export const Main = () => {
@@ -13,7 +14,7 @@ export const Main = () => {
             </Box>
           </Grid>
           <Grid item xs={6}>
-            <Paper>xs=6</Paper>
+            <SatelliteImage />
           </Grid>
           <Grid item xs={6}>
             <Paper>xs=6</Paper>
