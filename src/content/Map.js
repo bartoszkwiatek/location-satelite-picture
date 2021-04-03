@@ -1,7 +1,7 @@
 import {
   Card,
   CardContent,
-  CircularProgress,
+  LinearProgress,
   makeStyles,
   Paper,
   Tooltip,
@@ -79,7 +79,7 @@ export const Map = () => {
   }, [mapBox])
 
   if (!isLoaded) {
-    return <CircularProgress />
+    return <LinearProgress />
   }
 
   if (error) {

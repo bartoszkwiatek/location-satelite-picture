@@ -4,6 +4,7 @@ import {
   CardMedia,
   CircularProgress,
   Container,
+  LinearProgress,
   makeStyles,
   Typography,
 } from '@material-ui/core'
@@ -17,8 +18,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
+    height: '100%',
   },
   cardContent: {
+    height: '100%',
+
     transition: 'all 0.2s ease',
     opacity: '0',
     position: 'absolute',
@@ -47,10 +51,12 @@ export const SatelliteImage = () => {
   const nasa = context.searchLocation.nasa
   const [isLoaded, setIsLoaded] = useState(false)
   const [error, setError] = useState(null)
+  const [imageLoaded, setImageLoaded] = useState(false)
 
   useEffect(() => {
     setIsLoaded(false)
     setError(false)
+    setImageLoaded(false)
     if (mapBox) {
       async function fetchData() {
         return await fetch(nasaSearch(mapBox.center))
@@ -83,7 +89,7 @@ export const SatelliteImage = () => {
   }
 
   if (!isLoaded) {
-    return <CircularProgress />
+    return <LinearProgress />
   }
 
   if (error) {
@@ -102,26 +108,29 @@ export const SatelliteImage = () => {
   }
 
   return (
-    <Card square className={classes.root}>
-      <CardContent style={{ padding: 0, position: 'relative' }}>
-        <CardMedia
-          component="img"
-          height={'100%'}
-          src={nasa.url}
-          // onError={() => (this.src = 'https://placeimg.com/200/300/animals')}
-          alt="Satelite image"
-        />
-        <CardContent className={classes.cardContent}>
-          <Container className={classes.textContainer}>
-            <Typography gutterBottom variant="body1" component="h6">
-              {`${mapBox.center[1]}, ${mapBox.center[0]} `}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Date: {toDateString(nasa.date)}
-            </Typography>
-          </Container>
+    <React.Fragment>
+      {!imageLoaded && <LinearProgress />}
+      <Card square className={classes.root}>
+        <CardContent style={{ padding: 0, position: 'relative' }}>
+          <CardMedia
+            component="img"
+            height={'100%'}
+            src={nasa.url}
+            alt="Satelite image"
+            onLoad={() => setImageLoaded(true)}
+          />
+          <CardContent className={classes.cardContent}>
+            <Container className={classes.textContainer}>
+              <Typography gutterBottom variant="body1" component="h6">
+                {`${mapBox.center[1]}, ${mapBox.center[0]} `}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                Date: {toDateString(nasa.date)}
+              </Typography>
+            </Container>
+          </CardContent>
         </CardContent>
-      </CardContent>
-    </Card>
+      </Card>
+    </React.Fragment>
   )
 }
